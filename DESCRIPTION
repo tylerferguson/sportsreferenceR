@@ -1,0 +1,15 @@
+Package: sportsreferenceR
+Type: Package
+Title: R API For Sports Reference Websites
+Version: 0.1.0
+Author: Tyler Ferguson
+Maintainer: The package maintainer <tylerferguson235@gmail.com>
+Description: A reliable R wrapper around sports-reference.com and its various
+    subsidiary sites. Currently only Baskeball Reference is supported.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    magrittr,
+    rvest
