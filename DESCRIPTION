@@ -12,8 +12,16 @@ LazyData: true
 Imports:
     dplyr,
     magrittr,
-    rvest
-Suggests:
+    rvest,
     xml2,
+    purrr,
+    tidyr,
+    stats,
+    stringr,
+    rlang
+Suggests:
     testthat
 RoxygenNote: 7.1.0
+Roxygen: list(markdown = TRUE)
+Depends: 
+    R (>= 2.10)
