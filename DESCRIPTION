@@ -13,4 +13,6 @@ Imports:
     dplyr,
     magrittr,
     rvest
+Suggests:
+    xml2
 RoxygenNote: 7.1.0
