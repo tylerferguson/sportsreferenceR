@@ -4,22 +4,18 @@
 \alias{teams.team_index}
 \title{Index of all active NBA franchises.}
 \usage{
-teams.team_index()
+teams.team_index(include_total_history = FALSE)
+}
+\arguments{
+\item{include_total_history}{If TRUE, return data frame with all historical
+counterparts of each franchise listed as separate rows.}
 }
 \description{
 Returns the "Active Franchises" table as shown at
 \url{https://www.basketball-reference.com/teams/}.
 }
 \details{
-There are 2 key differences between the reference table and the return value
-of this function:
-\enumerate{
-\item Only the main table rows are present that represent the total history of
-the franchise, not the subtable rows e.g. the first "Atlanta Hawks" row is
-included but not the following four rows consisting of "Atlanta Hawks",
-"St. Louis Hawks", "Milwaukee Hawks" or "Tri-Cities Blackhawks".
-\item A TeamId variable is added that represents the Basketball Reference
+A TeamId variable is added that represents the Basketball Reference
 unique identifier for that team as shown in the team URL e.g. Atlanta - ATL
 (\url{https://www.basketball-reference.com/teams/ATL/}).
-}
 }

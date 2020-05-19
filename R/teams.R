@@ -10,18 +10,13 @@ team_index_url <- "https://www.basketball-reference.com/teams/"
 #' Returns the "Active Franchises" table as shown at
 #' \url{https://www.basketball-reference.com/teams/}.
 #'
-#' There are 2 key differences between the reference table and the return value
-#' of this function:
-#' 1. Only the main table rows are present that represent the total history of
-#' the franchise, not the subtable rows e.g. the first "Atlanta Hawks" row is
-#' included but not the following four rows consisting of "Atlanta Hawks",
-#' "St. Louis Hawks", "Milwaukee Hawks" or "Tri-Cities Blackhawks".
-#'
-#' 2. A TeamId variable is added that represents the Basketball Reference
+#' A TeamId variable is added that represents the Basketball Reference
 #' unique identifier for that team as shown in the team URL e.g. Atlanta - ATL
 #' (\url{https://www.basketball-reference.com/teams/ATL/}).
+#' @param include_total_history If TRUE, return data frame with all historical
+#'   counterparts of each franchise listed as separate rows.
 #' @export
-teams.team_index <- function() {
+teams.team_index <- function(include_total_history = FALSE) {
   active_table <- xml2::read_html(team_index_url) %>%
     rvest::html_nodes("#teams_active")
 
@@ -34,17 +29,39 @@ teams.team_index <- function() {
 
   team_ids <- matches[,2]
 
-  team_names <- team_links %>%
+  current_team_names <- team_links %>%
     rvest::html_text()
 
-  teams <- tibble(TeamId = team_ids, Franchise = team_names)
+  current_teams <- tibble(TeamId = team_ids, Franchise = current_team_names)
 
-  active_table %>%
-    first() %>%
-    rvest::html_table() %>%
-    right_join(teams, by = c("Franchise")) %>%
-    # keep first instance of each franchise
-    distinct(Franchise, .keep_all = TRUE) %>%
+  if (include_total_history) {
+    all_team_names <- active_table %>%
+      rvest::html_nodes("th") %>%
+      rvest::html_text()
+
+    all_teams <- tibble(Franchise = all_team_names) %>%
+      left_join(current_teams, by = "Franchise") %>%
+      tidyr::fill(TeamId)
+
+    team_index <- active_table %>%
+      first() %>%
+      rvest::html_table() %>%
+      left_join(all_teams, by = "Franchise") %>%
+      # remove first instance of each franchise (the row representing total
+      # franchise history)
+      arrange(-row_number()) %>%
+      distinct(Franchise, .keep_all = TRUE) %>%
+      arrange(-row_number())
+  } else {
+    team_index <- active_table %>%
+      first() %>%
+      rvest::html_table() %>%
+      right_join(current_teams, by = c("Franchise")) %>%
+      # keep first instance of each franchise
+      distinct(Franchise, .keep_all = TRUE)
+  }
+
+  team_index %>%
     select(Franchise, TeamId, everything())
 }
 
@@ -80,6 +97,7 @@ parse_team <- function(seasons_df) {
 #' @export
 teams.franchise_index <- function(team_ids = NULL) {
   if (team_ids %>% is.null()) {
+    utils::data(TEAM_IDS, package = "sportsreferenceR")
     team_ids <- TEAM_IDS$TeamId
   }
 
