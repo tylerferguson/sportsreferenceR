@@ -74,7 +74,9 @@ parse_team <- function(seasons_df) {
 #' representing whether the team made the playoffs in the corresponding season.
 #' This is determined by parsing the "*" symbol off the end of the Team variable
 #' such that there are no asterisks in the resulting Team name.
-#' @param team_ids A vector of Basketball Reference team IDs (see \code{\link{TEAM_IDS}})
+#' @param team_ids Optional vector of Basketball Reference team IDs (see \code{\link{TEAM_IDS}}).
+#'   Defaults to NULL which scrapes the franchise index of every active NBA team.
+#'
 #' @export
 teams.franchise_index <- function(team_ids = NULL) {
   if (team_ids %>% is.null()) {

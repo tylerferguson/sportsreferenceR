@@ -7,7 +7,8 @@
 teams.franchise_index(team_ids = NULL)
 }
 \arguments{
-\item{team_ids}{A vector of Basketball Reference team IDs (see \code{\link{TEAM_IDS}})}
+\item{team_ids}{Optional vector of Basketball Reference team IDs (see \code{\link{TEAM_IDS}}).
+Defaults to NULL which scrapes the franchise index of every active NBA team.}
 }
 \description{
 Returns the row binded "Seasons" tables as shown on individual team pages
